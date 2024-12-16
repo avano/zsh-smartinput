@@ -14,7 +14,7 @@ function __smartinput:widget:input_left_bracket {
   else
     local rule
     for rule in $__smartinput_rules; do
-      if [[ $#rule == 2 && "$rule[1]" == "$KEYS" ]]; then
+      if [[ $#rule == 2 && "$rule[1]" == "$KEYS" && -z "${RBUFFER}" ]]; then
         RBUFFER="$rule[2]$RBUFFER"
         break
       fi
@@ -44,8 +44,8 @@ function __smartinput:widget:input_quote {
   elif [[ "$KEYS" == "'" && "'$LBUFFER[-1]" =~ '\w' ]]; then
     # Support English "someone's"
     :
-  else
-    RBUFFER="$KEYS$RBUFFER"
+  elif [[ -z "${RBUFFER}" ]]; then
+    RBUFFER="$KEYS"
   fi
   zle self-insert
 }
